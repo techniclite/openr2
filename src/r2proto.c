@@ -1109,7 +1109,7 @@ static int check_backward_disconnection(openr2_chan_t *r2chan, int cas,
 	   to have it here for other variants as well just in case. If we ever find a reason to
 	   just accept this signal for Brazil, we need just to check the variant here 
 	   as well, or use some sort of per-variant flag to accept it */
-	if (cas == R2(r2chan, FORCED_RELEASE)) {
+	if (cas == R2(r2chan, FORCED_RELEASE) && r2chan->r2context->variant != OR2_VAR_VENEZUELA ) {
 		CAS_LOG_RX(FORCED_RELEASE);
 		*state = OR2_FORCED_RELEASE_RXD;
 		*cause = OR2_CAUSE_FORCED_RELEASE;
