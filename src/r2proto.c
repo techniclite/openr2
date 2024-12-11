@@ -309,7 +309,7 @@ static openr2_variant_entry_t r2variants[] =
 	{
 		/* .id */ OR2_VAR_VENEZUELA,
 		/* .name */ "VE",
-		/* .country */ "Venezuela",
+		/* .country */ "Venezuela, incluye caso NORTEL-CANTV",
 		/* .config */ r2config_venezuela
 	}
 };
@@ -1255,8 +1255,12 @@ handlecas:
 	case OR2_SEIZE_TXD:
 	case OR2_SEIZE_TXD_CLEAR_FWD_PENDING:
 		/* if we transmitted a seize we expect the seize ACK */
-		if (cas == R2(r2chan, SEIZE_ACK)) {
-			CAS_LOG_RX(SEIZE_ACK);
+		/* if a case Nortel Cantv we also expect a FORCED RELEASE as a seize ACK */
+                if (cas == R2(r2chan, SEIZE_ACK) || cas == R2(r2chan,FORCED_RELEASE)) {
+                        CAS_LOG_RX(SEIZE_ACK);
+                        if (cas == R2(r2chan,FORCED_RELEASE)) {
+                                openr2_log(r2chan, OR2_LOG_DEBUG, "Forced Release as Seize ACK Case NORTEL-Cantv!\n");
+                        }
 			openr2_chan_cancel_timer(r2chan, &r2chan->timer_ids.r2_seize);
 			if (r2chan->r2_state == OR2_SEIZE_TXD_CLEAR_FWD_PENDING) {
 				openr2_log(r2chan, OR2_CHANNEL_LOG, 
